@@ -13,19 +13,29 @@ permissions:
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # Checkout the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - run: npm ci
-      - run: npm run build
-      - uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./dist
 
-  deploy:
-    needs: build-deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/deploy-pages@v1
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Build the Astro site
+      - name: Build site
+        run: npm run build
+
+      # Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
+        with:
+          # The folder to deploy
+          folder: ./dist
